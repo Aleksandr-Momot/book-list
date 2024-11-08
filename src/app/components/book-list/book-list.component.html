@@ -1,0 +1,25 @@
+<div class="search-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Пошук за назвою або автором</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (input)="filterBooks()" placeholder="Введіть текст для пошуку">
+  </mat-form-field>
+</div>
+
+<div class="book-cards-container">
+  <mat-card *ngFor="let book of filteredBooks" class="book-card" >
+    <mat-card-header (click)="openBookDetails(book)">
+      <mat-card-title>{{ book.title }}</mat-card-title>
+      <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="no-pointer">
+      <p><strong>Рік видання:</strong> {{ book.year }}</p>
+    </mat-card-content>
+    <mat-card-actions align="end" class="no-pointer">
+      <button mat-button color="primary" (click)="editBook(book)">Редагувати</button>
+      <button mat-button color="warn" (click)="deleteBook(book.id)">Видалити</button>
+    </mat-card-actions>
+  </mat-card>
+  <div *ngIf="!filteredBooks.length">Список книг порожній</div>
+</div>
+
+<button mat-button (click)="openDialog(null)">Додати книгу</button>
