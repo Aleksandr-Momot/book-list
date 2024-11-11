@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
+import { Book } from '../../interfaces'; 
+
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { Book } from '../../interfaces';
 
 @Component({
   selector: 'app-book-details-dialog',
@@ -15,16 +16,15 @@ export class BookDetailsDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { book: Book }
   ) {}
 
-
-  closeDialog(): void {
+  public closeDialog(): void {
     this.dialogRef.close();
   }
 
-  editBook(): void {
+  public editBook(): void {
     this.dialogRef.close({ action: 'edit', book: this.data.book });
   }
 
-  deleteBook(): void {
+  public deleteBook(): void {
     this.dialogRef.close({ action: 'delete', bookId: this.data.book.id });
   }
 }

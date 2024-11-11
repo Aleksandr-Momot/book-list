@@ -1,53 +1,68 @@
 mat-dialog-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    padding-bottom: 1rem;
-  }
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 1rem;
+}
   
-  mat-dialog-content {
-    display: flex;
-    flex-direction: column;
-  }
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
   
-  mat-form-field {
-    margin: 5px;
-  }
-  
-  mat-error {
-    font-size: 0.875rem;
-    color: red;
-  }
-  
-  mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-  
-  button {
-    padding: 0.5rem 1.5rem;
-  }
-  
-  button[mat-dialog-close] {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  button[mat-dialog-close]:disabled {
-    background-color: #9e9e9e;
-  }
-  
-  button[mat-button] {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  button[mat-button]:hover {
-    background-color: #d32f2f;
-  }
-  
-  mat-dialog-container {
-    min-width: 400px;
-  }
+mat-form-field {
+  margin: 5px;
+}
+
+mat-error {
+  font-size: 0.875rem;
+  color: red;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+button {
+  padding: 0.5rem 1.5rem;
+}
+
+button[mat-dialog-close] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.mat-mdc-button[disabled] {
+  background-color: #9e9e9e;
+}
+
+button[mat-button] {
+  background-color: #f44336;
+  color: white;
+}
+
+button[mat-button]:hover {
+  background-color: #d32f2f;
+}
+
+mat-dialog-container {
+  min-width: 400px;
+}
+
+.file-upload {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-preview img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  margin-top: 1rem;
+  display: block;
+  object-fit: contain;
+}
   

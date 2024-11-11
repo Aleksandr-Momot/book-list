@@ -4,22 +4,30 @@
     <input matInput [(ngModel)]="searchQuery" (input)="filterBooks()" placeholder="Введіть текст для пошуку">
   </mat-form-field>
 </div>
-
-<div class="book-cards-container">
-  <mat-card *ngFor="let book of filteredBooks" class="book-card" >
-    <mat-card-header (click)="openBookDetails(book)">
-      <mat-card-title>{{ book.title }}</mat-card-title>
-      <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="no-pointer">
-      <p><strong>Рік видання:</strong> {{ book.year }}</p>
-    </mat-card-content>
-    <mat-card-actions align="end" class="no-pointer">
-      <button mat-button color="primary" (click)="editBook(book)">Редагувати</button>
-      <button mat-button color="warn" (click)="deleteBook(book.id)">Видалити</button>
-    </mat-card-actions>
-  </mat-card>
-  <div *ngIf="!filteredBooks.length">Список книг порожній</div>
+<div class="p-2">
+  <div class="book-cards-container">
+    <mat-card *ngFor="let book of filteredBooks; trackBy: trackByFn" class="book-card" @deleteAnimation>
+      <mat-card-header class="d-block" (click)="openBookDetails(book)">
+        <mat-card-title class="text-center mb-1 book-title">{{ book.title }}</mat-card-title>
+        <div class="image-container">
+          <img class="book-card-image" *ngIf="book.imageUrl" [src]="book.imageUrl" alt="Book Cover" class="book-cover">
+          <mat-card-subtitle class="text-center mt-1 text-white">{{ book.author }}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="no-pointer text-center">
+        <p><strong>Рік видання:</strong> {{ book.year }}</p>
+      </mat-card-content>
+      <mat-card-actions align="end" class="no-pointer">
+        <button mat-button color="primary" (click)="editBook(book)">Редагувати</button>
+        <button mat-button color="warn" (click)="deleteBook(book.id)">Видалити</button>
+      </mat-card-actions>
+    </mat-card>
+    <div *ngIf="!(loading$ | async) && !filteredBooks.length">Список книг порожній</div>
+  </div>
+  <button *ngIf="!(loading$ | async)" mat-button (click)="openDialog(null)" class="mt-2">Додати книгу</button>
 </div>
 
-<button mat-button (click)="openDialog(null)">Додати книгу</button>
+<div *ngIf="loading$ | async" class="d-flex flex-column align-items-center justify-content-center">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p class="mt-2">Завантаження...</p>
+</div>

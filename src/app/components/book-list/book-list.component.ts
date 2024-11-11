@@ -1,24 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BookLibraryServiceService } from '../../services/book-library-service.service';
-import { MatDialog } from '@angular/material/dialog';
 import { Book } from '../../interfaces';
-import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BookDialogComponent } from '../book-dialog/book-dialog.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { trigger, transition, style, animate } from '@angular/animations';
 import { BookDetailsDialogComponent } from '../book-details-dialog/book-details-dialog.component';
+import { trigger, transition, style, animate } from '@angular/animations';
+
+import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-book-list',
   standalone: true,
   imports: [
-    MatTableModule, 
     CommonModule, 
     MatFormFieldModule, 
     FormsModule, 
@@ -26,10 +26,18 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule, 
     MatInputModule, 
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './book-list.component.html',
-  styleUrl: './book-list.component.scss'
+  styleUrl: './book-list.component.scss',
+  animations: [
+    trigger('deleteAnimation', [
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'scale(0.9)' }))
+      ])
+    ])
+  ]
 })
 export class BookListComponent implements OnInit, OnDestroy  {
   private destroy$ = new Subject<void>();
@@ -37,21 +45,22 @@ export class BookListComponent implements OnInit, OnDestroy  {
   public displayedColumns: string[] = ['title', 'author', 'year', 'actions'];
   public searchQuery: string = ''; 
   public filteredBooks: Book[] = [];
+  public loading$: Observable<boolean>
   constructor(
     private bookService: BookLibraryServiceService,
     private dialog: MatDialog
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getBooksList();
   }
 
-  trackByBookId(index: number, book: Book): number {
-    return book.id as any;
+  public trackByFn(index: number, item: Book): number {
+    return item.id;
   }
 
-  getBooksList() {
+  private getBooksList(): void {
+    this.loading$ = this.bookService.loading$;
     this.bookService.books$
     .pipe(takeUntil(this.destroy$))
     .subscribe((books: Book[]) => {
@@ -60,11 +69,13 @@ export class BookListComponent implements OnInit, OnDestroy  {
     });
   }
 
-  openDialog(book: Book | null): void {
+  public openDialog(book: Book | null): void {
     const dialogRef = this.dialog.open(BookDialogComponent, {
       data: { book }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(result => {
       if (result) {
         if (book) {
           this.bookService.editBook(result);
@@ -75,11 +86,13 @@ export class BookListComponent implements OnInit, OnDestroy  {
     });
   }
 
-  openBookDetails(book: Book): void {
+  public openBookDetails(book: Book): void {
     const dialogRef = this.dialog.open(BookDetailsDialogComponent, {
       data: { book }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(result => {
       if (result?.action === 'edit') {
         this.openDialog(result.book);
       } else if (result?.action === 'delete') {
@@ -88,7 +101,7 @@ export class BookListComponent implements OnInit, OnDestroy  {
     });
   }
 
-  filterBooks(): void {
+  public filterBooks(): void {
     if (this.searchQuery.trim() === '') {
       this.filteredBooks = this.books;
     } else {
@@ -100,12 +113,12 @@ export class BookListComponent implements OnInit, OnDestroy  {
     }
   }
 
-  editBook(book: Book): void {
+  public editBook(book: Book): void {
     const bookToEdit = { ...book };
     this.openDialog(bookToEdit);
   }
 
-  deleteBook(bookId: number): void {
+  public deleteBook(bookId: number): void {
     if (confirm('Ви впевнені, що хочете видалити цю книгу?')) {
       this.bookService.deleteBook(bookId);
     }

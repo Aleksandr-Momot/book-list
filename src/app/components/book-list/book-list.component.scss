@@ -1,79 +1,95 @@
 table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  margin-right: 8px;
+}
+
+.mat-header-row, .mat-row {
+  height: 40px;
+}
+
+.mat-column-title {
+  font-weight: bold;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.book-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.book-card {
+  width: 250px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.book-card:hover {
+  transform: scale(1.05);
+}
+
+mat-card-header {
+  cursor: pointer;
+  background-color: #3f51b5;
+  color: white;
+  padding: 16px;
+  border-radius: 4px 4px 0 0;
+}
+
+mat-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+mat-card-subtitle {
+  font-size: 0.9rem;
+}
+
+mat-card-content p {
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-book-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.no-pointer {
+  cursor: initial;
+}
+
+.image-container {
+  height: 150px;
+  img {
+    height: 135px;
     width: 100%;
-    margin-bottom: 20px;
+    display: block;
+    object-fit: contain;
   }
-  
-  button {
-    margin-right: 8px;
-  }
-  
-  .mat-header-row, .mat-row {
-    height: 40px;
-  }
-  
-  .mat-column-title {
-    font-weight: bold;
-  }
+}
 
-  mat-form-field {
-    width: 100%;
-  }
-
-
-  .search-container {
-    margin-bottom: 20px;
-  }
-  
-  .book-cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-  }
-  
-  .book-card {
-    width: 250px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .book-card:hover {
-    transform: scale(1.05);
-  }
-  
-  mat-card-header {
-    cursor: pointer;
-    background-color: #3f51b5;
-    color: white;
-    padding: 16px;
-    border-radius: 4px 4px 0 0;
-  }
-  
-  mat-card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  mat-card-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  mat-card-content p {
-    font-size: 0.9rem;
-    margin: 4px 0;
-  }
-  
-  mat-card-actions {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .add-book-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .no-pointer {
-    cursor: initial;
-  }
+.book-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+}

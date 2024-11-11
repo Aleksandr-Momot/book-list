@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ data.book ? 'Редагувати книгу' : 'Додати нову книгу' }}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="bookForm">
+  <form [formGroup]="bookForm" class="text-center">
     <mat-form-field appearance="fill">
       <mat-label>Назва книги</mat-label>
       <input matInput formControlName="title" required />
@@ -13,11 +13,17 @@
       <mat-label>Рік видання</mat-label>
       <input matInput formControlName="year" type="number" required />
     </mat-form-field>
-
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" class="w-100">
       <mat-label>Опис</mat-label>
-      <input matInput formControlName="description" />
+      <textarea matInput formControlName="description" rows="4"></textarea>
     </mat-form-field>
+    <div class="file-upload align-items-center">
+      <input type="file" (change)="onCoverSelected($event)" #fileInput hidden>
+      <button mat-raised-button color="primary" (click)="fileInput.click()">Оберіть обкладинку *</button>
+    </div>
+    <div *ngIf="coverPreview" class="cover-preview">
+      <img [src]="coverPreview" alt="Превью обложки">
+    </div>
   </form>
 </div>
 <div mat-dialog-actions>
