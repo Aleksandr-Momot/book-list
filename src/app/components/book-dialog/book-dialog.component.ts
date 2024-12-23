@@ -1,13 +1,12 @@
-import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Book } from '../../interfaces';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Book, BookForm } from '../../interfaces';
 import { CommonModule } from '@angular/common';
 
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
 @Component({
   selector: 'app-book-dialog',
   standalone: true,
@@ -22,26 +21,36 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './book-dialog.component.html',
   styleUrl: './book-dialog.component.scss'
 })
-export class BookDialogComponent {
-  public bookForm: FormGroup;
+export class BookDialogComponent implements OnInit {
+  public bookForm: FormGroup<BookForm>;
   public coverPreview: string | null = null;
+  public data: {book: Book} = inject(MAT_DIALOG_DATA)
 
   constructor(
-    public dialogRef: MatDialogRef<BookDialogComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { book: Book }
-  ) {
-    this.bookForm = this.fb.group({
-      title: new FormControl<string>(data.book?.title || '', [Validators.required]),
-      author: new FormControl<string>(data.book?.author || '', [Validators.required]),
-      year: new FormControl<number | null>(data.book?.year || null, [Validators.required, Validators.pattern('^[0-9]{4}$')]),
-      description: new FormControl<string>(data.book?.description || ''),
-      id: new FormControl<number | null>(data.book?.id || null),
-      imageUrl: new FormControl<string>(data.book?.imageUrl || '', [Validators.required]),
-    });
-    if (data.book?.imageUrl) {
-      this.coverPreview = data.book.imageUrl;
+    public dialogRef: MatDialogRef<BookDialogComponent>
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
+    if (this.data?.book) {
+      this.patchBookForm(this.data.book)
     }
+  }
+
+  public initForm(): void {
+    this.bookForm = this.fb.group<BookForm>({
+      title: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+      author: this.fb.control( '', { nonNullable: true, validators: [Validators.required] }),
+      year: this.fb.control(null, [Validators.required, Validators.pattern('^[0-9]{4}$')]),
+      description: this.fb.control('', { nonNullable: true }),
+      id: this.fb.control(null),
+      imageUrl: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    });
+  }
+
+  public patchBookForm(data: Book): void {
+    this.bookForm.patchValue(data)
   }
 
   public onCoverSelected(event: Event): void {
